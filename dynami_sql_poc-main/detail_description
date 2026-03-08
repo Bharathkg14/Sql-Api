@@ -1,0 +1,70 @@
+Step-by-Step Flow
+
+1. Client Request
+The client invokes either the /rates/risk/get-data or /rates/risk/get-attributes API.
+The API endpoint is called with the path parameter /{datasource} and query/body parameters like filters, fields, operators, sort, and pagination.
+This defines which dataset (datasource) to query and how the data should be filtered, projected, and sorted.
+
+2. API Layer (FastAPI)
+The FastAPI layer receives the request, performs basic validation on the incoming payload (schema validation, data types, and parameter structure).
+Currently, authentication is not enforced, but the design supports easy integration of token-based or header-based authentication in future.
+The API parses the query intent — identifying filters, requested fields, aggregations, and pagination parameters.
+
+3. Config Loader
+Based on the datasource provided in the request path, the Config Loader module fetches the relevant configuration block from the table_config.yaml file.
+This YAML contains metadata such as:
+Table name and schema definitions
+Supported fields and operators
+Mandatory fields that must always be included in queries
+Supported aggregations or computed columns
+This makes the system fully configurable, allowing new datasources to be onboarded without changing code.
+
+4. Dynamic SQL Builder
+Using the configuration and request payload, the Dynamic SQL Builder validates each requested field and operator against the allowed configuration.
+It then:
+Automatically injects mandatory fields
+Builds a Pinot-compatible SQL (with SELECT, WHERE, GROUP BY, and ORDER BY clauses)
+Ensures only supported operators and fields are used, to maintain schema safety
+The result is a fully validated query string that can directly execute on Apache Pinot.
+
+5. Query Router
+The constructed SQL query is sent to the Pinot Broker API via an HTTP/JSON call.
+The broker distributes the query to Pinot servers, which scan their segments, apply aggregations or filters, and return a structured response containing:
+Rows of data
+Query execution metadata (e.g., time taken, scanned documents, segment stats)
+
+6. Pagination and Hard Cap
+To handle performance and count requirements, the system currently does not send LIMIT or OFFSET to Pinot.
+Instead, Pinot returns all results (bounded by a global HARD_CAP limit).
+The Python layer applies pagination in-memory, using:
+This design is required because Pinot does not support subqueries, so to calculate the total count, the complete result set must be fetched first.
+
+effective_limit = min(request.limit, HARD_CAP)
+
+7. Response Formatter
+The raw Pinot response is transformed into the standardized API schema expected by the client.
+It maps field aliases, formats numbers and timestamps, and ensures consistent key names.
+The output includes both:
+data: actual result rows
+meta: total count, execution time, and query summary
+
+8. Client Response
+The final structured JSON response is returned to the client.
+Example:
+
+{
+
+  "data": [...]
+
+  }
+
+}
+
+9. Adding a New Datasource/Table
+To onboard a new table or datasource, simply add a new block in table_config.yaml specifying:
+table_name
+fields
+supported_operators
+mandatory_fields
+aggregations
+No application code changes are needed — the Dynamic SQL Builder automatically picks up the new config and routes queries accordingly.

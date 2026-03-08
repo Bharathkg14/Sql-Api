@@ -1,0 +1,68 @@
+SCHEMAS:
+  newwpnl:
+    schema_name: newwpnl
+    schema_fields:
+      uidtype:
+        field_aliases: [ uidtype ]
+        field_type: VARCHAR
+      businessdate:
+        field_aliases: [ businessdate ]
+        field_type: INTEGER
+      existingpnl:
+        field_aliases: [ existingpnl ]
+        field_type: DOUBLE PRECISION
+      sourcebatchname:
+        field_aliases: [ sourcebatchname ]
+        field_type: VARCHAR
+      sourcebatchrunnumber:
+        field_aliases: [ sourcebatchrunnumber ]
+        field_type: VARCHAR
+      loaddatetimeutc:
+        field_aliases: [ loaddatetimeutc ]
+        field_type: BIGINT
+      publishdatetimeutc:
+        field_aliases: [ publishdatetimeutc ]
+        field_type: BIGINT
+      sourcerefid:
+        field_aliases: [ sourcerefid ]
+        field_type: VARCHAR
+      accountnusd:
+        field_aliases: [ accountnusd ]
+        field_type: DOUBLE PRECISION
+      newpnl:
+        field_aliases: [ newpnl ]
+        field_type: DOUBLE PRECISION
+      uid:
+        field_aliases: [ uid ]
+        field_type: VARCHAR
+      marktomarketpnltype:
+        field_aliases: [ marktomarketpnltype ]
+        field_type: VARCHAR
+      couponusd:
+        field_aliases: [ couponusd ]
+        field_type: DOUBLE PRECISION
+      version:
+        field_aliases: [ version ]
+        field_type: VARCHAR
+      firmaccountmnemonic:
+        field_aliases: [ firmaccountmnemonic ]
+        field_type: VARCHAR
+      traceid:
+        field_aliases: [ traceid ]
+        field_type: VARCHAR
+      financechargesusd:
+        field_aliases: [ financechargesusd ]
+        field_type: DOUBLE PRECISION
+      componentname:
+        field_aliases: [ componentname ]
+        field_type: VARCHAR
+      tag:
+        field_aliases: [ tag ]
+        field_type: VARCHAR
+    priority: 1
+    mandatory_fields: [uidtype, businessdate]
+    aggregation:                         
+      - field: newpnl
+        function: SUM
+        alias: total_newpnl
+    relations: []

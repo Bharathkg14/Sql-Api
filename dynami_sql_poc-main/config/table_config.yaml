@@ -1,0 +1,88 @@
+SCHEMAS:
+  newwpnl:
+    schema_name: newwpnl
+    schema_fields:
+      uidtype:
+        field_aliases: [ uidtype ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      businessdate:
+        field_aliases: [ businessdate ]
+        field_type: INTEGER
+        supported_operators: [COUNT, MIN, MAX]
+      existingpnl:
+        field_aliases: [ existingpnl ]
+        field_type: DOUBLE PRECISION
+        supported_operators: [SUM, AVG, MIN, MAX]
+      sourcebatchname:
+        field_aliases: [ sourcebatchname ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      sourcebatchrunnumber:
+        field_aliases: [ sourcebatchrunnumber ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      loaddatetimeutc:
+        field_aliases: [ loaddatetimeutc ]
+        field_type: BIGINT
+        supported_operators: [MIN, MAX]
+      publishdatetimeutc:
+        field_aliases: [ publishdatetimeutc ]
+        field_type: BIGINT
+        supported_operators: [MIN, MAX]
+      sourcerefid:
+        field_aliases: [ sourcerefid ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      accountnusd:
+        field_aliases: [ accountnusd ]
+        field_type: DOUBLE PRECISION
+        supported_operators: [SUM, AVG, MIN, MAX]
+      newpnl:
+        field_aliases: [ newpnl ]
+        field_type: DOUBLE PRECISION
+        supported_operators: [SUM, AVG, MIN, MAX]
+      uid:
+        field_aliases: [ uid ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      marktomarketpnltype:
+        field_aliases: [ marktomarketpnltype ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      couponusd:
+        field_aliases: [ couponusd ]
+        field_type: DOUBLE PRECISION
+        supported_operators: [SUM, AVG, MIN, MAX]
+      version:
+        field_aliases: [ version ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      firmaccountmnemonic:
+        field_aliases: [ firmaccountmnemonic ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      traceid:
+        field_aliases: [ traceid ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      financechargesusd:
+        field_aliases: [ financechargesusd ]
+        field_type: DOUBLE PRECISION
+        supported_operators: [SUM, AVG, MIN, MAX]
+      componentname:
+        field_aliases: [ componentname ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+      tag:
+        field_aliases: [ tag ]
+        field_type: VARCHAR
+        supported_operators: [COUNT]
+    priority: 1
+    mandatory_fields: [uidtype, businessdate]
+    aggregation:
+      - field: newpnl
+        function: SUM
+        alias: total_newpnl
+    relations: []
+    restricted_attributes: [uid]
